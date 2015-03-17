@@ -31,6 +31,9 @@ class Dog(object):
     
     def do_default_bark(self):
         return self.bark('Wau')
+
+class Chihuahua(Dog):
+    pass
     
 class InstanceMethodsTest(TestBase):
     def tearDown(self):
@@ -74,11 +77,10 @@ class InstanceMethodsTest(TestBase):
             pass
         
     def testCallingAStubbedMethodWithUnexpectedArgumentsShouldReturnNone(self):
-        when(Dog).bark('Miau').thenReturn('Wuff')        
+        when(Dog).bark('Miau').thenReturn('Wuff')
         rex = Dog()
         self.assertEquals(None, rex.bark('Shhh'))
-        
-        
+
     def testStubInstancesInsteadOfClasses(self):
         rex = Dog()
         when(rex).bark('Miau').thenReturn('Wuff')
@@ -88,7 +90,18 @@ class InstanceMethodsTest(TestBase):
 
         max = Dog()
         self.assertEquals('Miau!', max.bark('Miau'))
-        
+
+    def testUnstubSuperclassMethod(self):
+        when(Chihuahua).bark('Wuff').thenReturn('Miau')
+
+        self.assertTrue(callable(Chihuahua().bark))
+        self.assertEqual(Chihuahua().bark('Wuff'), 'Miau')
+
+        unstub()
+
+        self.assertEqual(Chihuahua().bark('Wuff'), 'Wuff!')
+        self.assertTrue(callable(Chihuahua().bark))
+
         
 if __name__ == '__main__':
     unittest.main()

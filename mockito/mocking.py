@@ -107,8 +107,6 @@ class mock(TestDouble):
     # TODO: Polymorphism was invented long time ago. Refactor this.
     if self.stubbing_real_object:
       self.replace_method(method_name, original_method)
-    else:
-        print 'sdf'
 
   def unstub(self):
     if not self.stubbing_real_object:
